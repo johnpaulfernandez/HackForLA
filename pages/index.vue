@@ -182,21 +182,16 @@ export default {
       }
       this.feedbackLoading = true;
       this.feedbackSubmitted = false;
-      return this.submitEmail(this.feedbackEmail)
-        .then(() => {
-          return axios.post('/thank-you', {
-            message: this.feedbackText,
-            email: this.feedbackEmail
-          });
-        })
-        .then(() => {
+      return this.submitEmail(this.feedbackEmail, this.feedbackText).then(
+        () => {
           this.feedbackLoading = false;
           this.feedbackSubmitted = true;
           this.feedbackEmail = '';
           this.feedbackText = '';
-        });
+        }
+      );
     },
-    submitEmail(email) {
+    submitEmail(email, feedback) {
       return axios.post(
         'https://actionnetwork.org/api/v2/people/',
         {
@@ -205,7 +200,10 @@ export default {
               {
                 address: email
               }
-            ]
+            ],
+            custom_fields: {
+              message: feedback
+            }
           }
         },
         {
@@ -220,5 +218,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
